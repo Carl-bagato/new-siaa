@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +132,9 @@ input {
             <button type="reset" class="btn btn-danger" form="flashcardForm">Close</button>
         </div>
         <h3 class="text-center mb-4">Create a new Flashcard Set</h3>
-        <form id="flashcardForm" onsubmit="validateForm(event)">
+
+        <form id="flashcardForm" onsubmit="prepareData(event)">
+            <!-- Remove method="POST" and action="save_flashcard.php" -->
             <div class="mb-3">
                 <label for="setTitle" class="form-label fw-bold">Set Title</label>
                 <input type="text" class="form-control" id="setTitle" placeholder="Enter set title" required>
@@ -140,11 +143,11 @@ input {
                 <label for="setDescription" class="form-label fw-bold">Set Description</label>
                 <textarea class="form-control" id="setDescription" rows="3" placeholder="Enter a brief description" required></textarea>
             </div>
-            <div id="flashcards">
-            </div>
+            <div id="flashcards"></div>
             <button type="button" class="btn btn-outline-success w-100 my-3" onclick="addCard()">Add More Card</button>
             <button type="submit" class="btn btn-primary-submit w-100">Create Flashcard Set</button>
         </form>
+
     </div>
 </div>
 
@@ -168,11 +171,11 @@ input {
                 <div class="d-flex gap-3">
                     <div class="mb-3 flex-grow-1">
                         <label for="term${cardNumber}" class="form-label fw-bold">Term</label>
-                        <input type="text" class="form-control" id="term${cardNumber}" placeholder="Enter term" required>
+                        <input type="text" class="form-control term-input" id="term${cardNumber}" placeholder="Enter term" required>
                     </div>
                     <div class="mb-3 flex-grow-1">
                         <label for="definition${cardNumber}" class="form-label fw-bold">Definition</label>
-                        <textarea class="form-control" id="definition${cardNumber}" rows="2" placeholder="Enter definition" required></textarea>
+                        <textarea class="form-control definition-input" id="definition${cardNumber}" rows="2" placeholder="Enter definition" required></textarea>
                     </div>
                 </div>
             </div>
@@ -183,6 +186,61 @@ input {
             cardCounter++; 
         }
     }
+
+    // Prepare JSON payload before submission
+    function prepareData(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const setTitle = document.getElementById("setTitle").value.trim();
+    const setDescription = document.getElementById("setDescription").value.trim();
+
+    const terms = document.querySelectorAll('.term-input');
+    const definitions = document.querySelectorAll('.definition-input');
+
+    const flashcards = [];
+    terms.forEach((term, index) => {
+        const definition = definitions[index];
+        if (term.value.trim() && definition.value.trim()) {
+            flashcards.push({ term: term.value.trim(), definition: definition.value.trim() });
+        }
+    });
+
+    const payload = {
+        user_id: 1, // Replace with actual user ID logic
+        set_title: setTitle,
+        set_description: setDescription,
+        flashcards: flashcards
+    };
+
+        // Send POST request with JSON payload using fetch
+        fetch('save_flashcard.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ flashcardData: payload })
+    })
+    .then(response => response.text()) // Get the raw response text first
+    .then(text => {
+        console.log('Raw response:', text); // Log the raw response for debugging
+        return JSON.parse(text); // Try to parse it as JSON
+    })
+    .then(data => {
+        console.log(data); // Handle success or error response here
+        if (data.status === 'success') {
+            alert('Flashcard set saved successfully');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('There was an error submitting the form: ' + error.message);
+    });
+
+}
+
+
 
     // Validate form fields
     function validateForm(event) {

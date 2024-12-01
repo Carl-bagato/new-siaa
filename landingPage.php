@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: loginPage.php");
+    exit();
+}
+
+// Display landing page content
+echo "<h1>Welcome to the Landing Page, " . $_SESSION['user_name'] . "!</h1>";
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -210,7 +224,7 @@ p {
     <div class="container">
         <h1><span class="highlight-hero">Master</span> Anything, Anytime</h1>
         <p class="lead my-4">Unlock your full learning potential with Quick Recall. Create, organize, and review flashcards effortlessly on any device. Whether you're preparing for exams, learning a new language, or mastering new skills helps boost your retention and achieve your goals faster.</p>
-        <a href="#signup" class="btn btn-lg custom-btn-hero">Get Started</a>
+        <a href="./createFlashcard.php" class="btn btn-lg custom-btn-hero">Get Started</a>
     </div>
 </section>
 

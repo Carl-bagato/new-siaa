@@ -1,0 +1,309 @@
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhbbhhjbbh
+                            [definition] => bhhjbbhjbh
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => bhbhbhjbh
+                            [definition] => bbhjbhjbhbhj
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => bhjbhbhjbh
+                            [definition] => bhbhjbbhbh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => bnbbmmnm
+                            [definition] => mnm,nm,m
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => nm,n,,mn
+                            [definition] => nm,mnmm,n
+                        )
+
+                )
+
+        )
+
+)
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhbbhhjbbh
+                            [definition] => bhhjbbhjbh
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => bhbhbhjbh
+                            [definition] => bbhjbhjbhbhj
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => bhjbhbhjbh
+                            [definition] => bhbhjbbhbh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => bnbbmmnm
+                            [definition] => mnm,nm,m
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => nm,n,,mn
+                            [definition] => nm,mnmm,n
+                        )
+
+                )
+
+        )
+
+)
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhbbhhjbbh
+                            [definition] => bhhjbbhjbh
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => bhbhbhjbh
+                            [definition] => bbhjbhjbhbhj
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => bhjbhbhjbh
+                            [definition] => bhbhjbbhbh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => bnbbmmnm
+                            [definition] => mnm,nm,m
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => nm,n,,mn
+                            [definition] => nm,mnmm,n
+                        )
+
+                )
+
+        )
+
+)
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhbbhhjbbh
+                            [definition] => bhhjbbhjbh
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => bhbhbhjbh
+                            [definition] => bbhjbhjbhbhj
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => bhjbhbhjbh
+                            [definition] => bhbhjbbhbh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => bnbbmmnm
+                            [definition] => mnm,nm,m
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => nm,n,,mn
+                            [definition] => nm,mnmm,n
+                        )
+
+                )
+
+        )
+
+)
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhbbhhjbbh
+                            [definition] => bhhjbbhjbh
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => bhbhbhjbh
+                            [definition] => bbhjbhjbhbhj
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => bhjbhbhjbh
+                            [definition] => bhbhjbbhbh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => bnbbmmnm
+                            [definition] => mnm,nm,m
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => nm,n,,mn
+                            [definition] => nm,mnmm,n
+                        )
+
+                )
+
+        )
+
+)
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhbbhhjbbh
+                            [definition] => bhhjbbhjbh
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => bhbhbhjbh
+                            [definition] => bbhjbhjbhbhj
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => bhjbhbhjbh
+                            [definition] => bhbhjbbhbh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => bnbbmmnm
+                            [definition] => mnm,nm,m
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => nm,n,,mn
+                            [definition] => nm,mnmm,n
+                        )
+
+                )
+
+        )
+
+)
+
+Response: {"status":"success","message":"Flashcard set saved successfully"}Response: {"status":"success","message":"Flashcard set saved successfully"}Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdad
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => bhjhjjkh
+                            [definition] => hhjhkjhkhhj
+                        )
+
+                    [1] => Array
+                        (
+                            [term] => hjkkhkhj
+                            [definition] => carl
+                        )
+
+                    [2] => Array
+                        (
+                            [term] => emma
+                            [definition] => hh
+                        )
+
+                    [3] => Array
+                        (
+                            [term] => ghgh
+                            [definition] => j
+                        )
+
+                    [4] => Array
+                        (
+                            [term] => hjh
+                            [definition] => hjhj
+                        )
+
+                )
+
+        )
+
+)
