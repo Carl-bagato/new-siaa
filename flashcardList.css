@@ -1,0 +1,93 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  color: #262626;
+  background-color: #f9f9f9;
+}
+
+.container {
+  max-width: 900px;
+}
+
+/* Card Styling */
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  font-size: 24px;
+  color: #262626;
+}
+
+.list-group-item {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+}
+
+.list-group-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Button Styling */
+.btn {
+  border-radius: 5px;
+}
+
+.btn-primary {
+  color: #fefefe;
+  background-color: #086942;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+  color: #fefefe;
+  background-color: #065533;
+  transform: scale(1.02);
+}
+
+.btn-warning {
+  color: #fefefe;
+  background-color: #ffc23b;
+  border: none;
+}
+
+.btn-warning:hover {
+  color: #fefefe;
+  background-color: #E6A02E;
+  border: none;
+}
+
+.btn-danger {
+  color: #fefefe; 
+  background-color: #ff7254;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-danger:hover {
+  color: #fefefe;
+  background-color: #CC5C44;
+  text-decoration: none;
+  border: none;
+}
+
+/* Flashcard Set Styling */
+.flashcard-set-item {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.flashcard-set-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+.flashcard-set-item .btn {
+  margin-left: 10px;
+}

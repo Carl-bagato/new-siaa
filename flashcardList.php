@@ -1,3 +1,30 @@
+<?php
+
+$host = 'localhost';
+$dbname = 'siaadatabase';
+$username = 'root';
+$password = '1802';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// Replace mock user ID with session logic in real use
+session_start();
+$loggedInUserId = $_SESSION['user_id'] ?? 1;
+
+// Fetch flashcards for the logged-in user
+$query = "SELECT flashcard_id, title, content, date_created FROM flashcard WHERE user_id = :user_id ORDER BY date_created DESC";
+$stmt = $pdo->prepare($query);
+$stmt->bindParam(':user_id', $loggedInUserId, PDO::PARAM_INT);
+$stmt->execute();
+$flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,113 +131,123 @@ body {
 
 </style>
 
-
 <body>
-
-<div class="container my-5">
-    <div class="card shadow-lg border-0 p-4">
-        <h3 class="text-center mb-4">Flashcard Sets</h3>
-        <div id="flashcardList" class="list-group">
+    <div class="container my-5">
+        <h1 class="text-center">Your Flashcards</h1>
+        <div id="flashcardList">
+            <?php if (count($flashcards) > 0): ?>
+                <?php foreach ($flashcards as $flashcard): ?>
+                  <div class="card shadow-lg border-0 p-4" data-id="<?= $flashcard['flashcard_id'] ?>">
+                        <h3 class="text-center mb-4"><?= htmlspecialchars($flashcard['title']) ?></h3>
+                        <p><?= nl2br(htmlspecialchars($flashcard['content'])) ?></p>
+                        <small class="text-muted">Created on: <?= htmlspecialchars($flashcard['date_created']) ?></small>
+                        <div class="text-center mt-3">
+                            <a href="./flashcardDisplay.php" class="btn btn-secondary btn-sm edit-btn" >Display</a>
+                            <a href="./editFlashcardSet.php" class="btn btn-warning btn-sm edit-btn">Edit</a>
+                            <button class="btn btn-danger btn-sm delete-btn">Delete</button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="alert alert-info text-center">
+                    No flashcards found. Start creating some!
+                </div>
+            <?php endif; ?>
         </div>
         <div class="text-center mt-3">
-            <button class="btn btn-primary" onclick="addFlashcardSet()">Add New Flashcard Set</button>
+            <a href="createFlashcard.php" class="btn btn-primary">Add New Flashcard Set</a>
         </div>
     </div>
-</div>
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script>
-const flashcardSets = [
-    {
-        id: 1,
-        title: "Set 1: Programming Basics",
-        description: "A set of flashcards to cover the basics of programming including variables, loops, and functions.",
-        cards: [
-            { term: "Variable", definition: "A container for storing data values." },
-            { term: "Function", definition: "A block of code designed to perform a particular task." },
-        ]
-    },
-    {
-        id: 2,
-        title: "Set 2: HTML & CSS",
-        description: "Flashcards covering the fundamentals of HTML and CSS.",
-        cards: [
-            { term: "HTML", definition: "The standard markup language for documents designed to be displayed in a web browser." },
-            { term: "CSS", definition: "A style sheet language used for describing the presentation of a document written in HTML." },
-        ]
-    }
-];
-
-function renderFlashcardSets() {
-    const flashcardList = document.getElementById('flashcardList');
-    flashcardList.innerHTML = ''; 
-
-    flashcardSets.forEach(set => {
-        const listItem = document.createElement('div');
-        listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-        
-        listItem.innerHTML = `
-            <div>
-                <h5>${set.title}</h5>
-                <p>${set.description}</p>
+    <!-- Modal for Editing Flashcard -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Flashcard</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editFlashcardForm">
+                        <input type="hidden" id="flashcardId">
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="editContent" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
             </div>
-            <div>
-                <button class="btn btn-warning btn-sm" onclick="editFlashcardSet(${set.id})">Edit</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteFlashcardSet(${set.id})">Delete</button>
-            </div>
-        `;
+        </div>
+    </div>
 
-        flashcardList.appendChild(listItem);
-    });
-}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Handle Edit Button Click
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.card');
+                    const id = card.getAttribute('data-id');
+                    const title = card.querySelector('h3').innerText;
+                    const content = card.querySelector('p').innerText;
 
-function addFlashcardSet() {
-    const newSet = {
-        id: flashcardSets.length + 1,
-        title: "Set " + (flashcardSets.length + 1),
-        description: "Description for new set",
-        cards: []
-    };
-    flashcardSets.push(newSet);
-    renderFlashcardSets();
-}
+                    document.getElementById('flashcardId').value = id;
+                    document.getElementById('editTitle').value = title;
+                    document.getElementById('editContent').value = content;
 
-function editFlashcardSet(setId) {
-    const set = flashcardSets.find(f => f.id === setId);
+                    const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                    modal.show();
+                });
+            });
 
-    document.getElementById('editSetTitle').value = set.title;
-    document.getElementById('editSetDescription').value = set.description;
-    
-    document.getElementById('editModal').dataset.setId = setId;
+            // Handle Edit Form Submission
+            document.getElementById('editFlashcardForm').addEventListener('submit', (e) => {
+                e.preventDefault();
 
-    const modal = new bootstrap.Modal(document.getElementById('editModal'));
-    modal.show();
-}
+                const id = document.getElementById('flashcardId').value;
+                const title = document.getElementById('editTitle').value;
+                const content = document.getElementById('editContent').value;
 
-function updateFlashcardSet() {
-    const setId = document.getElementById('editModal').dataset.setId;
-    const set = flashcardSets.find(f => f.id === parseInt(setId));
+                fetch('update_flashcard.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, title, content })
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to update flashcard.');
+                    }
+                });
+            });
 
-    set.title = document.getElementById('editSetTitle').value;
-    set.description = document.getElementById('editSetDescription').value;
+            // Handle Delete Button Click
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.card');
+                    const id = card.getAttribute('data-id');
 
-    renderFlashcardSets();
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-    modal.hide();
-}
-
-function deleteFlashcardSet(setId) {
-    const index = flashcardSets.findIndex(f => f.id === setId);
-    if (index !== -1) {
-        flashcardSets.splice(index, 1); 
-        renderFlashcardSets(); 
-    }
-}
-
-renderFlashcardSets();
-</script>
-
+                    if (confirm('Are you sure you want to delete this flashcard?')) {
+                        fetch('delete_flashcard.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id })
+                        }).then(response => response.json()).then(data => {
+                            if (data.success) {
+                                card.remove();
+                            } else {
+                                alert('Failed to delete flashcard.');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

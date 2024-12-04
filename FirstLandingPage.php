@@ -1,14 +1,5 @@
 <?php
 session_start();
-
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: loginPage.php");
-    exit();
-}
-
-// Display landing page content
-echo "<h1>Welcome to the Landing Page, " . $_SESSION['user_name'] . "!</h1>";
 ?>
 
 
@@ -211,10 +202,10 @@ p {
                     <li class="nav-item"><a class="nav-link me-3" href="#features">Features</a></li>
                     <li class="nav-item"><a class="nav-link me-3" href="#contact">Contact</a></li>
                 </ul>
-                <!-- <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="btn btn-primary px-4 me-2" href="#signup">Sign Up</a></li>
-                    <li class="nav-item"><a class="btn btn-outline-primary px-4" href="#login">Login</a></li>
-                </ul> -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="btn btn-primary px-4 me-2" href="./signupPage.php">Sign Up</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-primary px-4" href="./loginPage.php">Login</a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -224,7 +215,7 @@ p {
     <div class="container">
         <h1><span class="highlight-hero">Master</span> Anything, Anytime</h1>
         <p class="lead my-4">Unlock your full learning potential with Quick Recall. Create, organize, and review flashcards effortlessly on any device. Whether you're preparing for exams, learning a new language, or mastering new skills helps boost your retention and achieve your goals faster.</p>
-        <a href="./flashcardList.php" class="btn btn-lg custom-btn-hero">Go To Dashboard</a>
+        <a href="./createFlashcardNoLogin.php" class="btn btn-lg custom-btn-hero">Get Started</a>
     </div>
 </section>
 
