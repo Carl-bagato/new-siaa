@@ -27,109 +27,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <style>
     body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
+        font-family: 'Inter', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
 
-.container {
-    max-width: 800px;
-}
+    .container {
+        max-width: 800px;
+    }
 
-.card {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 30px;
-}
+    .card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 30px;
+    }
 
-h3 {
-    color: #333;
-    font-weight: 600;
-}
+    h3 {
+        color: #333;
+        font-weight: 600;
+    }
 
-.card-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-}
+    .card-item {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+    }
 
-label.form-label {
-    font-weight: bold;
-}
+    .btn-secondary {
+        color: #fefefe;
+        background-color: #ffc23b;
+        border: none;
+    }
 
-input.form-control, textarea.form-control {
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-    padding: 10px;
-    transition: border-color 0.3s;
-}
+    .btn-secondary:hover {
+        color: #fefefe;
+        background-color: #E6A02E;
+        border: none;
+    }
 
-.is-invalid {
-    border-color: #dc3545;
-}
+    .btn-danger {
+        color: #fefefe;
+        background-color: #ff7254;
+        text-decoration: none;
+        border: none;
+    }
 
-.d-flex {
-    display: flex;
-    align-items: flex-start;
-}
+    .btn-danger:hover {
+        color: #fefefe;
+        background-color: #CC5C44;
+        text-decoration: none;
+        border: none;
+    }
 
-.gap-3 {
-    gap: 1rem;
-}
+    .btn-primary-submit {
+        color: #fefefe;
+        background-color: #086942;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
 
-.btn-secondary{
-    color: #fefefe;
-    background-color: #ffc23b;
-    border: none;
-}
+    .btn-primary-submit:hover {
+        color: #fefefe;
+        background-color: #065533;
+        transform: scale(1.02);
+    }
 
-.btn-secondary:hover{
-    color: #fefefe;
-    background-color: #E6A02E;
-    border: none;
-}
+    .btn-outline-success {
+        color: #fefefe;
+        background-color: #73d4eb;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
 
-.btn-danger{
-    color: #fefefe; 
-    background-color: #ff7254;
-    text-decoration: none;
-    border: none;
-}
-
-.btn-danger:hover{
-    color: #fefefe;
-    background-color: #CC5C44;
-    text-decoration: none;
-    border: none;
-}
-
-.btn-primary-submit {
-    color: #fefefe;
-    background-color: #086942;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-primary-submit:hover {
-    color: #fefefe;
-    background-color: #065533;
-    transform: scale(1.02);
-}
-
-.btn-outline-success{
-    color: #fefefe;
-    background-color: #73d4eb;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-outline-success:hover{
-    color: #fefefe;
-    background-color: #58b9d0;
-    border: none;
-    transform: scale(1.02);
-}
+    .btn-outline-success:hover {
+        color: #fefefe;
+        background-color: #58b9d0;
+        border: none;
+        transform: scale(1.02);
+    }
 
 </style>
 <body>
@@ -153,7 +128,26 @@ input.form-control, textarea.form-control {
             <div id="flashcards"></div>
             <button type="button" class="btn btn-outline-success w-100 my-3" onclick="addCard()">Add More Card</button>
             <button type="submit" class="btn btn-primary-submit w-100">Create Flashcard Set</button>
-         </form>
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                You need to log in or sign up to add more flashcards beyond the default limit.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="/login" class="btn btn-primary">Log In</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -171,7 +165,8 @@ input.form-control, textarea.form-control {
         const flashcardsDiv = document.getElementById("flashcards");
 
         if (!initial && cardCounter >= maxCards) {
-            alert("Please log in or sign up to add more cards.");
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
             return;
         }
 
@@ -217,3 +212,4 @@ input.form-control, textarea.form-control {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
