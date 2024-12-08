@@ -1,15 +1,17 @@
 <?php
-    session_start();
+session_start(); // Start the session
 
-    // Check if the user is logged in
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: loginPage.php");
-        exit();
-    }
+// Check if both the user_name and user_id are set in the session
+if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
+    // Redirect to login page if not logged in
+    header('Location: loginPage.php');
+    exit;
+}
 
-    // Display landing page content
-    echo "<h1>Welcome to the Landing Page, " . $_SESSION['user_name'] . "!</h1>";
+// If user is logged in, display their information
+echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_name']) . "! </h1>";
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -181,6 +183,21 @@ p {
     background-color: #065533;
 }
 
+.btn-danger {
+        color: #fefefe;
+        background-color: #ff7254;
+        text-decoration: none;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        color: #fefefe;
+        background-color: #CC5C44;
+        text-decoration: none;
+        border: none;
+    }
+
+
 /* Footer */
 .footer {
     color: #262626;
@@ -210,10 +227,10 @@ p {
                     <li class="nav-item"><a class="nav-link me-3" href="#features">Features</a></li>
                     <li class="nav-item"><a class="nav-link me-3" href="#contact">Contact</a></li>
                 </ul>
-                <!-- <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="btn btn-primary px-4 me-2" href="#signup">Sign Up</a></li>
-                    <li class="nav-item"><a class="btn btn-outline-primary px-4" href="#login">Login</a></li>
-                </ul> -->
+                <ul class="navbar-nav ms-auto">
+                    <!-- <li class="nav-item"><a class="btn btn-primary px-4 me-2" href="#signup">Sign Up</a></li> -->
+                    <li class="nav-item"><a class="btn btn-danger" href="./logoutNoLogin.php">Logout</a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -223,7 +240,7 @@ p {
     <div class="container">
         <h1><span class="highlight-hero">Master</span> Anything, Anytime</h1>
         <p class="lead my-4">Unlock your full learning potential with Quick Recall. Create, organize, and review flashcards effortlessly on any device. Whether you're preparing for exams, learning a new language, or mastering new skills helps boost your retention and achieve your goals faster.</p>
-        <a href="./flashcardList.php" class="btn btn-lg custom-btn-hero">Go To Dashboard</a>
+        <a href="flashcardDashboard.php" class="btn btn-lg custom-btn-hero">Go To Dashboard</a>
     </div>
 </section>
 

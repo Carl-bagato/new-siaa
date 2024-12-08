@@ -1,56 +1,31 @@
 <?php
-
 session_start();
-
-// Database connection
-$servername = "localhost";  // Your database host
-$username = "root";         // Your database username
-$password = "1802";             // Your database password
-$dbname = "siaadatabase";   // Your database name
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once 'db_config.php'; // Ensure $pdo is defined
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Capture user input from the form
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $confirmPassword = mysqli_real_escape_string($conn, $_POST['confirmPassword']);
-    
-    // Check if passwords match
-    if ($password !== $confirmPassword) {
-        echo "Passwords do not match.";
-        exit();
-    }
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // Hash the password before storing it
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Prepare the SQL statement to prevent SQL injection
-    $stmt = $conn->prepare("INSERT INTO user (user_name, password) VALUES (?, ?)");
-    $stmt->bind_param("ss", $username, $hashedPassword);
+    // Prepare the SQL query to insert the user record
+    $stmt = $pdo->prepare("INSERT INTO user (user_name, password) VALUES (:username, :password)");
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
 
-    // Execute the query and check if the insertion was successful
+    // Execute the query to insert the new user
     if ($stmt->execute()) {
-        echo "Registration successful!";
-        // Redirect to login page after successful registration
-        header("Location: ./loginPage.php");
+        $_SESSION['success_message'] = "Account created successfully!";
+        header("Location: loginPage.php");
         exit();
     } else {
-        echo "Error: " . $stmt->error;
+        $_SESSION['error_message'] = "Error creating account.";
+        header("Location: signupPage.php");
+        exit();
     }
-
-    // Close the prepared statement
-    $stmt->close();
 }
-
-// Close the database connection
-$conn->close();
 ?>
 
 <!DOCTYPE html>

@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="/login" class="btn btn-primary">Log In</a>
+                <a href="./loginPage.php" class="btn btn-primary">Log In</a>
             </div>
         </div>
     </div>

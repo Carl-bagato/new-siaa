@@ -1,27 +1,26 @@
 <?php
+    session_start(); // Start the session
 
-$host = 'localhost';
-$dbname = 'siaadatabase';
-$username = 'root';
-$password = '1802';
+    // Check if both the user_name and user_id are set in the session
+    if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
+        // Redirect to login page if not logged in
+        header('Location: loginPage.php');
+        exit;
+    }
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
+    echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_name']) . "!</h1>";
 
-// Replace mock user ID with session logic in real use
-session_start();
-$loggedInUserId = $_SESSION['user_id'] ?? 1;
+    $loggedInUserId = $_SESSION['user_id']; // Get the logged-in user's ID
+    echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_id']) . "!</h1>";
 
-// Fetch flashcards for the logged-in user
-$query = "SELECT flashcard_id, title, content, date_created FROM flashcard WHERE user_id = :user_id ORDER BY date_created DESC";
-$stmt = $pdo->prepare($query);
-$stmt->bindParam(':user_id', $loggedInUserId, PDO::PARAM_INT);
-$stmt->execute();
-$flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    require_once 'db_config.php';
+
+    // Fetch flashcards for the logged-in user
+    $query = "SELECT flashcard_id, title, content, date_created FROM flashcard WHERE user_id = :user_id ORDER BY date_created DESC";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':user_id', $loggedInUserId, PDO::PARAM_INT);
+    $stmt->execute();
+    $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
@@ -142,8 +141,8 @@ body {
                         <p><?= nl2br(htmlspecialchars($flashcard['content'])) ?></p>
                         <small class="text-muted">Created on: <?= htmlspecialchars($flashcard['date_created']) ?></small>
                         <div class="text-center mt-3">
-                            <a href="./flashcardDisplay.php" class="btn btn-secondary btn-sm edit-btn" >Display</a>
-                            <a href="./editFlashcardSet.php" class="btn btn-warning btn-sm edit-btn">Edit</a>
+                            <a href="flashcardDisplay.php?flashcard_id=<?= $flashcard['flashcard_id'] ?>" class="btn btn-secondary btn-sm edit-btn">Display</a>
+                            <a href="editFlashcardSet.php" class="btn btn-warning btn-sm edit-btn">Edit</a>
                             <button class="btn btn-danger btn-sm delete-btn">Delete</button>
                         </div>
                     </div>

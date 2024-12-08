@@ -307,3 +307,23 @@ Response: {"status":"success","message":"Flashcard set saved successfully"}Respo
         )
 
 )
+Array
+(
+    [flashcardData] => Array
+        (
+            [user_id] => 1
+            [set_title] => art app
+            [set_description] => dasdas
+            [flashcards] => Array
+                (
+                    [0] => Array
+                        (
+                            [term] => ocm
+                            [definition] => dsada
+                        )
+
+                )
+
+        )
+
+)
