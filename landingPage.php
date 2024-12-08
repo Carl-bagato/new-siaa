@@ -1,16 +1,15 @@
 <?php
-session_start();
+    session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: loginPage.php");
-    exit();
-}
+    // Check if the user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: loginPage.php");
+        exit();
+    }
 
-// Display landing page content
-echo "<h1>Welcome to the Landing Page, " . $_SESSION['user_name'] . "!</h1>";
+    // Display landing page content
+    echo "<h1>Welcome to the Landing Page, " . $_SESSION['user_name'] . "!</h1>";
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
