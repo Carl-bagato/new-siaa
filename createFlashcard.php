@@ -6,8 +6,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_name'])) {
+if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
     die("Access denied. Please log in first.");
 }
 
@@ -53,9 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quick Recall - Create Flashcard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link href="createFlashcard.css" rel="stylesheet"> -->
 </head>
 <style>
     body {
@@ -179,13 +174,14 @@ input {
     resize: none;
 } */
 </style>
-
 <body>
-
 <div class="container my-5">
     <div class="card shadow-lg border-0 p-4">
+        <div class="d-flex justify-content-between mb-4">
+            <button class="btn btn-secondary" onclick="history.back()">Back</button>
+            <button type="reset" class="btn btn-danger" form="flashcardForm">Reset</button>
+        </div>
         <h3 class="text-center mb-4">Create a new Flashcard Set</h3>
-
         <form method="POST" id="flashcardForm">
             <div class="mb-3">
                 <label for="setTitle" class="form-label fw-bold">Set Title</label>
@@ -206,6 +202,14 @@ input {
 <script>
     let cardCounter = 1;
 
+    // Add initial 5 cards when the page loads
+    window.onload = function() {
+        for (let i = 0; i < 5; i++) {
+            addCard();
+        }
+    };
+
+    // Function to dynamically add cards
     function addCard() {
         const flashcardsDiv = document.getElementById("flashcards");
 
@@ -232,6 +236,7 @@ input {
         cardCounter++;
     }
 
+    // Function to delete a specific card
     function deleteCard(cardNumber) {
         const cardElement = document.getElementById(`card${cardNumber}`);
         if (cardElement) {

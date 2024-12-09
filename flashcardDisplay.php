@@ -1,54 +1,49 @@
 <?php
-session_start(); // Start the session
+    session_start(); 
 
-// Check if both the user_name and user_id are set in the session
-if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
-    // Redirect to login page if not logged in
-    header('Location: loginPage.php');
-    exit;
-}
-
-echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_name']) . "!</h1>";
-
-$loggedInUserId = $_SESSION['user_id']; // Get the logged-in user's ID
-echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_id']) . "!</h1>";
-
-require_once 'db_config.php';
-
-// Check if the flashcard_id is provided in the URL
-if (!isset($_GET['flashcard_id'])) {
-    die("No flashcard set found.");
-}
-
-$flashcard_id = $_GET['flashcard_id'];
-
-// Fetch the flashcard set and its terms from the database
-try {
-    // Fetch flashcard set (title and content) using the correct column names
-    $stmt = $pdo->prepare("SELECT title, content FROM flashcard WHERE flashcard_id = ?");
-    $stmt->execute([$flashcard_id]);
-    $flashcard = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$flashcard) {
-        die("Flashcard set not found with ID: " . htmlspecialchars($flashcard_id));
+    if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
+        header('Location: loginPage.php');
+        exit;
     }
 
-    // Fetch terms and definitions
-    $stmt = $pdo->prepare("SELECT term, answer FROM term_answer WHERE flashcard_id = ?");
-    $stmt->execute([$flashcard_id]);
-    $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $loggedInUserId = $_SESSION['user_id'];
 
-    if (empty($terms)) {
-        die("No terms found for flashcard ID: " . htmlspecialchars($flashcard_id));
+    require_once 'db_config.php';
+
+
+    if (!isset($_GET['flashcard_id'])) {
+        die("No flashcard set found.");
     }
 
-} catch (Exception $e) {
-    die("Error fetching flashcards: " . $e->getMessage());
-}
+    $flashcard_id = $_GET['flashcard_id'];
 
-$title = $flashcard['title'];
-$content = $flashcard['content']; 
-$description = $content;
+    // Fetch the flashcard set and its terms from the database
+    try {
+        // Fetch flashcard set (title and content) using the correct column names
+        $stmt = $pdo->prepare("SELECT title, content FROM flashcard WHERE flashcard_id = ?");
+        $stmt->execute([$flashcard_id]);
+        $flashcard = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$flashcard) {
+            die("Flashcard set not found with ID: " . htmlspecialchars($flashcard_id));
+        }
+
+        // Fetch terms and definitions
+        $stmt = $pdo->prepare("SELECT term, answer FROM term_answer WHERE flashcard_id = ?");
+        $stmt->execute([$flashcard_id]);
+        $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($terms)) {
+            die("No terms found for flashcard ID: " . htmlspecialchars($flashcard_id));
+        }
+
+    } catch (Exception $e) {
+        die("Error fetching flashcards: " . $e->getMessage());
+    }
+
+    $title = $flashcard['title'];
+    $content = $flashcard['content']; 
+    $description = $content;
 ?>
 
 <!DOCTYPE html>
@@ -184,6 +179,7 @@ button {
 
 <body>
     <div class="container d-flex flex-column align-items-center mt-5">
+        <button class="btn btn-secondary position-absolute top-0 start-0 m-3" onclick="history.back()">Back</button>
         <button class="btn btn-danger position-absolute top-0 end-0 m-3" id="close-btn">Close</button>
         <!-- Title and Description -->
         <div class="title"><?php echo htmlspecialchars($title); ?></div>
@@ -257,11 +253,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const closeBtn = document.getElementById("close-btn");
         if (closeBtn) {
             closeBtn.addEventListener("click", function() {
-                console.log("Close button clicked");  // Debugging log to check if the button is clicked
-                window.location.href = "logoutNoLogin.php"; 
+                console.log("Close button clicked");  
+                window.location.href = "flashcardDashboard.php"; 
             });
         } else {
-            console.log("Close button not found");
+            console.log("Close button is not functioning"); 
         }
     });
 // Initialize the first flashcard

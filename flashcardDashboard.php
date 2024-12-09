@@ -1,17 +1,13 @@
 <?php
-    session_start(); // Start the session
+    session_start(); 
 
-    // Check if both the user_name and user_id are set in the session
+
     if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
-        // Redirect to login page if not logged in
         header('Location: loginPage.php');
         exit;
     }
 
-    echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_name']) . "!</h1>";
-
-    $loggedInUserId = $_SESSION['user_id']; // Get the logged-in user's ID
-    echo "<h1>Welcome to the Landing Page, " . htmlspecialchars($_SESSION['user_id']) . "!</h1>";
+    $loggedInUserId = $_SESSION['user_id']; 
 
     require_once 'db_config.php';
 
@@ -87,6 +83,17 @@ body {
   transform: scale(1.02);
 }
 
+.btn-secondary{
+    color: #fefefe;
+    background-color: #ffc23b;
+    border: none;
+}
+
+.btn-secondary:hover{
+    color: #fefefe;
+    background-color: #E6A02E;
+    border: none;
+}
 .btn-warning {
   color: #fefefe;
   background-color: #ffc23b;
@@ -132,6 +139,9 @@ body {
 
 <body>
     <div class="container my-5">
+        <a href="landingPage.php" class="btn btn-secondary">Back</a>
+        <button class="btn btn-danger position-absolute top-0 end-0 m-3" id="close-btn">Log Out</button>
+
         <h1 class="text-center">Your Flashcards</h1>
         <div id="flashcardList">
             <?php if (count($flashcards) > 0): ?>
@@ -141,7 +151,7 @@ body {
                         <p><?= nl2br(htmlspecialchars($flashcard['content'])) ?></p>
                         <small class="text-muted">Created on: <?= htmlspecialchars($flashcard['date_created']) ?></small>
                         <div class="text-center mt-3">
-                            <a href="flashcardDisplay.php?flashcard_id=<?= $flashcard['flashcard_id'] ?>" class="btn btn-secondary btn-sm edit-btn">Display</a>
+                            <a href="flashcardDisplay.php?flashcard_id=<?= $flashcard['flashcard_id'] ?>" class="btn btn-primary btn-sm edit-btn">Display</a>
                             <a href="editFlashcardSet.php" class="btn btn-warning btn-sm edit-btn">Edit</a>
                             <button class="btn btn-danger btn-sm delete-btn">Delete</button>
                         </div>
@@ -184,69 +194,57 @@ body {
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Handle Edit Button Click
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const card = e.target.closest('.card');
-                    const id = card.getAttribute('data-id');
-                    const title = card.querySelector('h3').innerText;
-                    const content = card.querySelector('p').innerText;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-                    document.getElementById('flashcardId').value = id;
-                    document.getElementById('editTitle').value = title;
-                    document.getElementById('editContent').value = content;
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    // Handle Delete Button Click
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const card = e.target.closest('.card');
+            const id = card.getAttribute('data-id');
 
-                    const modal = new bootstrap.Modal(document.getElementById('editModal'));
-                    modal.show();
-                });
-            });
+            console.log("Deleting flashcard with ID:", id);  // Log the ID to check
 
-            // Handle Edit Form Submission
-            document.getElementById('editFlashcardForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const id = document.getElementById('flashcardId').value;
-                const title = document.getElementById('editTitle').value;
-                const content = document.getElementById('editContent').value;
-
-                fetch('update_flashcard.php', {
+            if (confirm('Are you sure you want to delete this flashcard?')) {
+                // Send the delete request
+                fetch('delete_flashcard.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, title, content })
+                    body: JSON.stringify({ id })
                 }).then(response => response.json()).then(data => {
                     if (data.success) {
-                        location.reload();
+                        card.style.transition = "opacity 1s";
+                        card.style.opacity = "0";
+                        setTimeout(() => {
+                            card.remove();
+                        }, 1000);
                     } else {
-                        alert('Failed to update flashcard.');
+                        alert('Failed to delete flashcard.');
+                        console.log(data.message);  // Log error message if deletion fails
                     }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the flashcard.');
                 });
-            });
-
-            // Handle Delete Button Click
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const card = e.target.closest('.card');
-                    const id = card.getAttribute('data-id');
-
-                    if (confirm('Are you sure you want to delete this flashcard?')) {
-                        fetch('delete_flashcard.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id })
-                        }).then(response => response.json()).then(data => {
-                            if (data.success) {
-                                card.remove();
-                            } else {
-                                alert('Failed to delete flashcard.');
-                            }
-                        });
-                    }
-                });
-            });
+            }
         });
-    </script>
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+        const closeBtn = document.getElementById("close-btn");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", function() {
+                console.log("Close button clicked");  
+                window.location.href = "FirstLandingPage.php"; 
+            });
+        } else {
+            console.log("Close button is not functioning"); 
+        }
+    });
+
+</script>
+
 </body>
 </html>

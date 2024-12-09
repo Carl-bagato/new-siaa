@@ -18,7 +18,7 @@ function checkDbConnection($dsn, $username, $password) {
         // Test if the connection is successful by querying a simple table or row
         $stmt = $pdo->query("SELECT 1");
         if ($stmt) {
-            echo "Database connection is successful!";
+            //echo "Database connection is successful!";
         }
         return $pdo;
     } catch (PDOException $e) {

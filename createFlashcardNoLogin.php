@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="card shadow-lg border-0 p-4">
         <div class="d-flex justify-content-between mb-4">
             <button class="btn btn-secondary" onclick="history.back()">Back</button>
-            <button type="reset" class="btn btn-danger" form="flashcardForm">Close</button>
+            <button type="reset" class="btn btn-danger" form="flashcardForm">Reset</button>
         </div>
         <h3 class="text-center mb-4">Create a new Flashcard Set</h3>
         <form id="flashcardForm" method="POST" action="">
@@ -152,61 +152,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-    let cardCounter = 10;
-    const maxCards = 10;
+   let cardCounter = 5;  // Start with 5 cards
+const maxCards = 10;  // Total limit of 10 cards
 
-    function initializeCards() {
-        for (let i = 1; i <= 10; i++) {
-            addCard(true, i);
-        }
+// Initialize 5 cards when the page is loaded
+function initializeCards() {
+    for (let i = 1; i <= cardCounter; i++) {
+        addCard(true, i);
+    }
+}
+
+// Add a card when the "Add More Card" button is clicked
+function addCard(initial = false, cardIndex = null) {
+    const flashcardsDiv = document.getElementById("flashcards");
+
+    // Check if the user has reached the maximum card limit
+    if (!initial && cardCounter >= maxCards) {
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show();
+        return;
     }
 
-    function addCard(initial = false, cardIndex = null) {
-        const flashcardsDiv = document.getElementById("flashcards");
+    const cardNumber = cardIndex || cardCounter + 1; // Use passed cardIndex or increment counter
 
-        if (!initial && cardCounter >= maxCards) {
-            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-            loginModal.show();
-            return;
-        }
-
-        const cardNumber = cardIndex || cardCounter + 1;
-
-        const cardHTML = `
-            <div class="card-item border p-3 mb-3 rounded" id="card${cardNumber}">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold">Card ${cardNumber}</h6>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCard(${cardNumber})">Delete</button>
+    // Create the card HTML
+    const cardHTML = `
+        <div class="card-item border p-3 mb-3 rounded" id="card${cardNumber}">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold">Card ${cardNumber}</h6>
+                <button class="btn btn-danger btn-sm" onclick="deleteCard(${cardNumber})">Delete</button>
+            </div>
+            <div class="d-flex gap-3">
+                <div class="mb-3 flex-grow-1">
+                    <label for="term${cardNumber}" class="form-label fw-bold">Term</label>
+                    <input type="text" class="form-control" id="term${cardNumber}" name="flashcards[${cardNumber}][term]" placeholder="Enter term" required>
                 </div>
-                <div class="d-flex gap-3">
-                    <div class="mb-3 flex-grow-1">
-                        <label for="term${cardNumber}" class="form-label fw-bold">Term</label>
-                        <input type="text" class="form-control" id="term${cardNumber}" name="flashcards[${cardNumber}][term]" placeholder="Enter term" required>
-                    </div>
-                    <div class="mb-3 flex-grow-1">
-                        <label for="definition${cardNumber}" class="form-label fw-bold">Definition</label>
-                        <textarea class="form-control" id="definition${cardNumber}" name="flashcards[${cardNumber}][definition]" rows="2" placeholder="Enter definition" required></textarea>
-                    </div>
+                <div class="mb-3 flex-grow-1">
+                    <label for="definition${cardNumber}" class="form-label fw-bold">Definition</label>
+                    <textarea class="form-control" id="definition${cardNumber}" name="flashcards[${cardNumber}][definition]" rows="2" placeholder="Enter definition" required></textarea>
                 </div>
             </div>
-        `;
+        </div>
+    `;
 
-        flashcardsDiv.insertAdjacentHTML("beforeend", cardHTML);
+    flashcardsDiv.insertAdjacentHTML("beforeend", cardHTML);
 
-        if (!initial) {
-            cardCounter++;
-        }
+    // Increment the counter only if the card is added by the user
+    if (!initial) {
+        cardCounter++;
     }
+}
 
-    function deleteCard(cardNumber) {
-        const cardElement = document.getElementById(`card${cardNumber}`);
-        if (cardElement) {
-            cardElement.remove();
-            cardCounter--;
-        }
+// Delete a card
+function deleteCard(cardNumber) {
+    const cardElement = document.getElementById(`card${cardNumber}`);
+    if (cardElement) {
+        cardElement.remove();
+        cardCounter--;
     }
+}
 
-    document.addEventListener("DOMContentLoaded", initializeCards);
+// Initialize cards on page load
+document.addEventListener("DOMContentLoaded", initializeCards);
+
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
