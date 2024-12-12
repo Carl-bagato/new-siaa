@@ -1,0 +1,165 @@
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #262626;
+    background-color: #f9f9f9;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+}
+
+p {
+    color: #555;
+}
+
+/* Navbar */
+.navbar {
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-link {
+    color: #262626;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #f1f1f3;
+    color: #000;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.btn-primary{
+    color: #fefefe;
+    background-color: #73d4eb;
+    border: none;
+}
+
+.btn-primary:hover{
+    color: #fefefe;
+    background-color: #58b9d0;
+    border: none;
+}
+
+.btn-outline-primary {
+    color: #fefefe;
+    background-color: #086942;
+    border: none;
+}
+
+.btn-outline-primary:hover {
+    background-color: #065533;
+    color: #fff;
+}
+
+/* Hero Section */
+#hero-section {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+#hero-section h1 {
+    font-size: clamp(2.5rem, 5vw, 3rem);
+    margin-bottom: 1rem;
+}
+
+.highlight-hero {
+    color: #73d4eb;
+}
+
+#hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.custom-btn-hero {
+    color: #fefefe;
+    background-color: #086942;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.custom-btn-hero:hover {
+    color: #fefefe;
+    background-color: #065533;
+    transform: scale(1.05);
+}
+
+/* About Section */
+#about {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.highlight-about {
+    color: #ff7254;
+}
+
+/* Features Section */
+#features {
+    background-color: #f9f9f9;
+    padding: 4rem 2rem;
+}
+
+.highlight-features {
+    color: #ffc23b;
+}
+
+.card {
+    border-radius: 12px;
+    background-color: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Section */
+#contact {
+    padding: 4rem 2rem;
+}
+
+.btn-contact {
+    color: #fefefe;
+    background-color: #086942;
+    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-contact:hover {
+    color: #fefefe;
+    background-color: #065533;
+}
+
+/* Footer */
+.footer {
+    color: #262626;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.875rem;
+}
