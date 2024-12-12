@@ -3,19 +3,18 @@
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\Url;
-use yii\db\Query;
-
-$rows = (new Query())
-    ->from('your_table')
-    ->all();
-
-foreach ($rows as $row) {
-    // Process each row
-}
 
 $this->title = 'Login - Quick Recall';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
+
+<?php if (Yii::$app->session->hasFlash('Success! Account created successfully!')): ?>
+    <div class="alert alert-success">
+        <?= Yii::$app->session->getFlash('Success! Account created successfully!') ?>
+    </div>
+<?php endif; ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -45,10 +44,19 @@ $this->params['breadcrumbs'][] = $this->title;
     }
     a { color: #086942; text-decoration: none; }
     a:hover { color: #065533; text-decoration: none; }
+
+    .home {
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 </style>
 
 <body>
-
+    <div class="home">
+        <a href="<?= Url::to(['site/index']) ?>" class="btn btn-primary">Back to Home</a>
+    </div>
     <div class="login-container d-flex align-items-center justify-content-center vh-100">
         <div class="card shadow-lg border-0 p-4" style="max-width: 400px; width: 100%;">
             <div class="text-center mb-4">
@@ -58,12 +66,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php $form = ActiveForm::begin([
                 'id' => 'login-form',
                 'method' => 'POST',
-                'action' => Url::to(['site/login']),  // Yii2 action URL for login
-                'options' => ['onsubmit' => 'return validateForm()'],
+                'action' => Url::to(['site/login']),  // Use the correct action URL
             ]); ?>
 
             <div class="mb-3">
-                <?= $form->field($model, 'username')->textInput([
+                <?= $form->field($model, 'user_name')->textInput([
                     'class' => 'form-control',
                     'placeholder' => 'Enter your username',
                     'required' => true,
@@ -89,20 +96,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-<script>
-function validateForm() {
-    const username = document.getElementById("loginform-username").value;
-    const password = document.getElementById("loginform-password").value;
-
-    if (username === "" || password === "") {
-        alert("Please fill in both fields.");
-        return false; // Prevent form submission
-    }
-
-    return true; // Allow form submission
-}
-</script>
 
 </body>
 </html>

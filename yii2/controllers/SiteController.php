@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\SignupForm;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -27,12 +28,6 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -71,23 +66,29 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome(); // If the user is already logged in, redirect to the homepage.
-        }
-
         $model = new LoginForm();
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack(); // Redirect user back to the page they were originally trying to visit
+            return $this->goBack();
         }
 
-        // If the login fails, clear the password field and render the login page with the model.
-        $model->password = '';
         return $this->render('loginPage', [
             'model' => $model,
         ]);
     }
 
+
+    public function actionLandingPage()
+    {
+        // Make sure the user is logged in
+        if (Yii::$app->user->isGuest) {
+            // If not logged in, redirect to login page
+            return $this->redirect(['login']);
+        }
+
+        // Render the landing page if the user is logged in
+        return $this->render('landingPage');
+    }
 
     /**
      * Logout action.
@@ -98,11 +99,9 @@ class SiteController extends Controller
      public function actionLogout()
      {
          Yii::$app->user->logout();
-         
-         Yii::$app->session->destroy();
-
-         return $this->render(['index']);
+         return $this->goHome();
      }
+
      public function actionCloseFlashcard()
     {
         Yii::$app->session->remove('flashcards'); // Clear flashcard data
@@ -182,4 +181,66 @@ class SiteController extends Controller
             'flashcards' => $flashcards,
         ]);
     }
+
+    public function actionTestDb()
+    {
+        $db = Yii::$app->db;
+
+        // Check and return connection status
+        if ($db->isActive) {
+            return "Database connection is successful!";
+        } else {
+            try {
+                $db->open(); // Force connection
+                return $db->isActive ? "Database connection established successfully!" : "Failed to connect.";
+            } catch (\Exception $e) {
+                return "Database connection failed: " . $e->getMessage();
+            }
+        }
+    }
+
+
+    public function actionCreateTestUser()
+    {
+        $hashedPassword = Yii::$app->security->generatePasswordHash('testpassword');
+        Yii::$app->db->createCommand()->insert('user', [
+            'user_name' => 'testuser',
+            'password' => $hashedPassword,
+        ])->execute();
+
+        return "Test user created successfully!";
+    }
+
+    public function actionTestPassword()
+    {
+        $user = \app\models\User::findByUsername('testuser');
+        if (!$user) {
+            return "User not found!";
+        }
+
+        $isValid = Yii::$app->security->validatePassword('testpassword', $user->password);
+        return $isValid ? "Password is valid!" : "Password is invalid!";
+    }
+
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+
+        // Check if the form is submitted and validation is successful
+        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+            Yii::$app->session->setFlash('success', 'Account created successfully!');
+            
+            // Redirect to login page after successful signup
+            return $this->redirect(['site/login']);
+        }
+
+        // Render the signup page if form is not submitted or validation fails
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+    
+
+
+
 }

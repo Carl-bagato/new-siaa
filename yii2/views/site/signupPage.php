@@ -1,122 +1,94 @@
+<!-- views/site/signup.php -->
 <?php
-session_start();
-require_once 'db_config.php'; // Ensure $pdo is defined
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Capture user input from the form
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$this->title = 'Sign Up';
+$this->params['breadcrumbs'][] = $this->title;
+$this->registerCssFile("@web/css/site.css");
 
-    // Hash the password before storing it
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    // Prepare the SQL query to insert the user record
-    $stmt = $pdo->prepare("INSERT INTO user (user_name, password) VALUES (:username, :password)");
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
-
-    // Execute the query to insert the new user
-    if ($stmt->execute()) {
-        $_SESSION['success_message'] = "Account created successfully!";
-        header("Location: loginPage.php");
-        exit();
-    } else {
-        $_SESSION['error_message'] = "Error creating account.";
-        header("Location: signupPage.php");
-        exit();
-    }
-}
 ?>
+<div class="home">
+        <a href="<?= Url::to(['site/index']) ?>" class="btn btn-primary">Back to Home</a>
+</div>
+<div class="site-signup">
+    <div class="card shadow-lg border-0 p-4" style="max-width: 400px; width: 100%;">
+        <div class="text-center mb-4">
+            <h3 class="mt-3"><?= Html::encode($this->title) ?></h3>
+        </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Recall - Sign Up</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
+        <?php $form = ActiveForm::begin(); ?>
 
-<style>
+            <div class="mb-3">
+                <?= $form->field($model, 'user_name')->textInput(['placeholder' => 'Enter your username'])->label('Username') ?>
+            </div>
+
+            <div class="mb-3">
+                <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Create a password'])->label('Password') ?>
+            </div>
+
+            <div class="mb-3">
+                <?= $form->field($model, 'confirmPassword')->passwordInput(['placeholder' => 'Confirm your password'])->label('Confirm Password') ?>
+            </div>
+
+            <div class="mb-3">
+                <?= Html::submitButton('Sign Up', ['class' => 'btn btn-primary-signup w-100']) ?>
+            </div>
+
+        <?php ActiveForm::end(); ?>
+
+        <div class="text-center mt-3">
+            <p class="small">Already have an account? <?= Html::a('Login', ['site/login']) ?></p>
+        </div>
+    </div>
+</div>
+
+<?php
+// Optionally, include your custom CSS styles for the page
+$this->registerCss("
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     body {
         font-family: 'Inter', sans-serif;
         background-color: #f9f9f9;
         margin: 0;
         color: #262626;
     }
-
-    /* Sign Up Container */
-    .signup-container {
-        background-color: #f9f9f9;
-        padding: 20px;
-    }
-
-    .card {
-        border-radius: 12px;
-    }
-
-    .card h3 {
-        font-weight: 600;
-        color: #333;
-    }
-
-    /* Buttons */
     .btn-primary-signup {
-        color: #fefefe;
         background-color: #73d4eb;
         border: none;
         transition: background-color 0.3s ease, transform 0.3s ease;
     }
-
     .btn-primary-signup:hover {
-        color: #fefefe;
         background-color: #58b9d0;
         transform: scale(1.02);
     }
-
-    /* Links */
     a {
         color: #73d4eb;
         text-decoration: none;
     }
-
     a:hover {
         color: #58b9d0;
-        text-decoration: none;
     }
-</style>
 
-<body>
-
-<!-- Sign Up -->
-<div class="signup-container d-flex align-items-center justify-content-center vh-100">
-    <div class="card shadow-lg border-0 p-4" style="max-width: 400px; width: 100%;">
-        <div class="text-center mb-4">
-            <h3 class="mt-3">Sign Up</h3>
-        </div>
-        <!-- Ensure the form uses POST method -->
-        <form method="POST">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
-            </div>
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
-            </div>
-            <button type="submit" class="btn btn-primary-signup w-100">Sign Up</button>
-        </form>
-        <div class="text-center mt-3">
-            <p class="small">Already have an account? <a href="./loginPage.php">Login</a></p>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    .site-signup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .help-block {
+        color: red;
+    }
+    .home {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+");
+?>

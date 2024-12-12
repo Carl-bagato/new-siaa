@@ -43,8 +43,16 @@ $config = [
                 ],
             ],
         ],
-        'db' => require __DIR__ . '/db.php',
-        
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=siaadatabase;charset=utf8mb4',
+            'username' => 'root',
+            'password' => '1802',
+            'charset' => 'utf8mb4',
+            'enableLogging' => true, // Enable logging of SQL queries
+            'enableProfiling' => true, // Enable profiling of queries
+        ],
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

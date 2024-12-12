@@ -55,8 +55,8 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
                 ['label' => 'About Us', 'url' => '#about', 'linkOptions' => ['class' => 'nav-link']],
                 ['label' => 'Features', 'url' => '#features', 'linkOptions' => ['class' => 'nav-link']],
                 ['label' => 'Contact', 'url' => '#contact', 'linkOptions' => ['class' => 'nav-link']],
-                ['label' => 'Sign Up', 'url' => ['/signup'], 'linkOptions' => ['class' => 'btn btn-primary ms-3']],
-                ['label' => 'Login', 'url' => ['/login'], 'linkOptions' => ['class' => 'btn btn-outline-primary ms-2']],
+                ['label' => 'Sign Up', 'url' => ['site/signup'], 'linkOptions' => ['class' => 'btn btn-primary ms-3']],
+                ['label' => 'Login', 'url' => ['/site/login'], 'linkOptions' => ['class' => 'btn btn-outline-primary ms-2']],
             ],
         ]);
         NavBar::end();
