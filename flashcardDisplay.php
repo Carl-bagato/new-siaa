@@ -1,14 +1,62 @@
+<?php
+    session_start(); 
+
+    if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
+        header('Location: loginPage.php');
+        exit;
+    }
+
+    $loggedInUserId = $_SESSION['user_id'];
+
+    require_once 'db_config.php';
+
+
+    if (!isset($_GET['flashcard_id'])) {
+        die("No flashcard set found.");
+    }
+
+    $flashcard_id = $_GET['flashcard_id'];
+
+    // Fetch the flashcard set and its terms from the database
+    try {
+        // Fetch flashcard set (title and content) using the correct column names
+        $stmt = $pdo->prepare("SELECT title, content FROM flashcard WHERE flashcard_id = ?");
+        $stmt->execute([$flashcard_id]);
+        $flashcard = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$flashcard) {
+            die("Flashcard set not found with ID: " . htmlspecialchars($flashcard_id));
+        }
+
+        // Fetch terms and definitions
+        $stmt = $pdo->prepare("SELECT term, answer FROM term_answer WHERE flashcard_id = ?");
+        $stmt->execute([$flashcard_id]);
+        $terms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($terms)) {
+            die("No terms found for flashcard ID: " . htmlspecialchars($flashcard_id));
+        }
+
+    } catch (Exception $e) {
+        die("Error fetching flashcards: " . $e->getMessage());
+    }
+
+    $title = $flashcard['title'];
+    $content = $flashcard['content']; 
+    $description = $content;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>>Quick Recall - Flashcard</title>
+    <title>Quick Recall - Flashcard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="flashcardDisplay.css"> -->
 </head>
 
 <style>
+
 body {
     display: flex;
     align-items: center;
@@ -19,12 +67,13 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-.container{
+.container {
     position: relative;
+    text-align: center;
 }
 
 #close-btn {
-    background-color: #dc3545; /* Bootstrap danger color */
+    background-color: #dc3545; 
     border: none;
     font-size: 1rem;
     color: white;
@@ -37,7 +86,7 @@ body {
 }
 
 #close-btn:hover {
-    background-color: #c82333; /* Darker shade on hover */
+    background-color: #c82333; 
 }
 
 .flashcard-container {
@@ -56,7 +105,7 @@ body {
     cursor: pointer;
 }
 
-.flashcard .front, 
+.flashcard .front,
 .flashcard .back {
     position: absolute;
     width: 100%;
@@ -90,66 +139,77 @@ button {
     padding: 0.6rem 1.5rem;
 }
 
-.btn-secondary{ 
-    color: #fefefe; 
+.btn-secondary {
+    color: #fefefe;
     background-color: #ff7254;
     text-decoration: none;
     border: none;
 }
 
-.btn-secondary:hover{
+.btn-secondary:hover {
     color: #fefefe;
     background-color: #CC5C44;
     text-decoration: none;
     border: none;
 }
 
-.btn-primary{
+.btn-primary {
     color: #fefefe;
     background-color: #ffc23b;
     border: none;
 }
 
-.btn-primary:hover{
+.btn-primary:hover {
     color: #fefefe;
     background-color: #E6A02E;
     border: none;
 }
 
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
-
+.description {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
 </style>
 
 <body>
     <div class="container d-flex flex-column align-items-center mt-5">
+        <button class="btn btn-secondary position-absolute top-0 start-0 m-3" onclick="history.back()">Back</button>
         <button class="btn btn-danger position-absolute top-0 end-0 m-3" id="close-btn">Close</button>
+        <!-- Title and Description -->
+        <div class="title"><?php echo htmlspecialchars($title); ?></div>
+        <div class="description"><?php echo htmlspecialchars($description); ?></div>
+        
+        <!-- Flashcard Container -->
         <div class="flashcard-container">
             <div class="flashcard">
                 <div class="front">
-                <h3 id="flashcard-term">Term 1</h3>
+                    <h3 id="flashcard-term"></h3>
                 </div>
                 <div class="back">
-                <p id="flashcard-definition">Definition 1</p>
+                    <p id="flashcard-definition"></p>
                 </div>
             </div>
         </div>
+
+        <!-- Flashcard Navigation -->
         <div class="mt-4">
+            <span id="term-number" class="me-3"></span>
             <button class="btn btn-secondary me-3" id="prev-btn" disabled>&laquo; Previous</button>
             <button class="btn btn-primary" id="flip-btn">Flip</button>
             <button class="btn btn-secondary ms-3" id="next-btn">Next &raquo;</button>
         </div>
     </div>
 
-
-<!-- <script src="flashcardDisplay.js"></script> -->
 <script>
-    const flashcards = [
-    { term: "Term 1", definition: "Definition 1" },
-    { term: "Term 2", definition: "Definition 2" },
-    { term: "Term 3", definition: "Definition 3" },
-    { term: "Term 4", definition: "Definition 4" },
-    { term: "Term 5", definition: "Definition 5" }
-];
+// Fetching flashcards data from PHP
+const flashcards = <?php echo json_encode($terms); ?>;
+const flashcardCount = flashcards.length;
 
 let currentIndex = 0;
 
@@ -159,10 +219,18 @@ const flipBtn = document.getElementById("flip-btn");
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const flashcard = document.querySelector(".flashcard");
+const termNumberEl = document.getElementById("term-number");
 
+// Function to update the flashcard content
 function updateFlashcard() {
+    if (currentIndex < 0 || currentIndex >= flashcards.length) {
+        console.error("Invalid flashcard index:", currentIndex);
+        return; // Prevents trying to display a non-existing flashcard
+    }
+
     termEl.textContent = flashcards[currentIndex].term;
-    definitionEl.textContent = flashcards[currentIndex].definition;
+    definitionEl.textContent = flashcards[currentIndex].answer;
+    termNumberEl.textContent = `Term ${currentIndex + 1} of ${flashcardCount}`;
 
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex === flashcards.length - 1;
@@ -172,25 +240,28 @@ function updateFlashcard() {
     }
 }
 
-flipBtn.addEventListener("click", () => {
-    flashcard.classList.toggle("flipped");
-});
+// Flip the flashcard when the flip button is clicked
+flipBtn.addEventListener("click", () => flashcard.classList.toggle("flipped"));
 
-prevBtn.addEventListener("click", () => {
-    currentIndex--;
-    updateFlashcard();
-});
+// Go to the previous flashcard
+prevBtn.addEventListener("click", () => { currentIndex--; updateFlashcard(); });
 
-nextBtn.addEventListener("click", () => {
-    currentIndex++;
-    updateFlashcard();
-});
+// Go to the next flashcard
+nextBtn.addEventListener("click", () => { currentIndex++; updateFlashcard(); });
 
+document.addEventListener("DOMContentLoaded", function() {
+        const closeBtn = document.getElementById("close-btn");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", function() {
+                console.log("Close button clicked");  
+                window.location.href = "flashcardDashboard.php"; 
+            });
+        } else {
+            console.log("Close button is not functioning"); 
+        }
+    });
+// Initialize the first flashcard
 updateFlashcard();
-
-
-
-
-</script>
+    </script>
 </body>
 </html>
