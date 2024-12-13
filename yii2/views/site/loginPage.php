@@ -9,11 +9,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<?php if (Yii::$app->session->hasFlash('Success! Account created successfully!')): ?>
+<?php if (Yii::$app->session->hasFlash('success')): ?>
     <div class="alert alert-success">
-        <?= Yii::$app->session->getFlash('Success! Account created successfully!') ?>
+        <?= Yii::$app->session->getFlash('success') ?>
     </div>
 <?php endif; ?>
+
 
 
 <!DOCTYPE html>

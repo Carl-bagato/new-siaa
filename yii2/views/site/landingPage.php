@@ -8,7 +8,6 @@ use yii\bootstrap5\Nav;
 
 $this->title = 'Quick Recall';
 
-// Register your custom CSS for landing page, if needed
 $this->registerCssFile('@web/css/landingPage.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
 
 // Check if the user is logged in, using Yii's user component

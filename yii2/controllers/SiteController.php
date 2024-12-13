@@ -69,13 +69,15 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            // Explicitly redirect to the landing page upon successful login
+            return $this->redirect(['site/landing-page']);
         }
 
         return $this->render('loginPage', [
             'model' => $model,
         ]);
     }
+
 
 
     public function actionLandingPage()
@@ -226,19 +228,16 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
 
-        // Check if the form is submitted and validation is successful
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
             Yii::$app->session->setFlash('success', 'Account created successfully!');
-            
-            // Redirect to login page after successful signup
             return $this->redirect(['site/login']);
         }
 
-        // Render the signup page if form is not submitted or validation fails
-        return $this->render('signup', [
+        return $this->render('signupPage', [
             'model' => $model,
         ]);
     }
+
     
 
 
