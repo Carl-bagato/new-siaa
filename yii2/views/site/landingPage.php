@@ -45,7 +45,7 @@ NavBar::end();
         <p class="lead my-4">
             Unlock your full learning potential with Quick Recall. Create, organize, and review flashcards effortlessly on any device. Whether you're preparing for exams, learning a new language, or mastering new skills helps boost your retention and achieve your goals faster.
         </p>
-        <a href="<?= Url::to(['flashcard-dashboard/index']) ?>" class="btn btn-lg custom-btn-hero">Go To Dashboard</a>
+        <a href="<?= Url::to(['flashcard/index']) ?>" class="btn btn-lg custom-btn-hero">Go To Dashboard</a>    
     </div>
 </section>
 

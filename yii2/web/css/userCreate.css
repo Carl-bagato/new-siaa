@@ -1,0 +1,79 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+h3 {
+    color: #333;
+    font-weight: 600;
+}
+
+.card-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary {
+    color: #fefefe;
+    background-color: #ffc23b;
+    border: none;
+}
+
+.btn-secondary:hover {
+    color: #fefefe;
+    background-color: #E6A02E;
+    border: none;
+}
+
+.btn-danger {
+    color: #fefefe;
+    background-color: #ff7254;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-danger:hover {
+    color: #fefefe;
+    background-color: #CC5C44;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-primary-submit {
+    color: #fefefe;
+    background-color: #086942;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary-submit:hover {
+    color: #fefefe;
+    background-color: #065533;
+    transform: scale(1.02);
+}
+
+.btn-outline-success {
+    color: #fefefe;
+    background-color: #73d4eb;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-outline-success:hover {
+    color: #fefefe;
+    background-color: #58b9d0;
+    border: none;
+    transform: scale(1.02);
+}

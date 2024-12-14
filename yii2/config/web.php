@@ -57,8 +57,10 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'flashcard/create' => 'flashcard/create',
-                'flashcard/display' => 'flashcard/display',
+                // 'flashcard/create' => 'flashcard/create',
+                // 'flashcard/display' => 'flashcard/display',
+                'flashcard-dashboard' => 'flashcard/index',
+
             ],
         ],
         
