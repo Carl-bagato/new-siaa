@@ -9,13 +9,14 @@ use yii\helpers\Url;
 
 $this->title = 'Flashcard Set: ' . Html::encode($flashcard->title);
 $this->registerCssFile('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
-$this->registerCssFile('@web/css/userCreate.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+$this->registerCssFile('@web/css/userDisplay.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+
 ?>
 
 <div class="container my-5">
     <div class="card shadow-lg border-0 p-4">
         <div class="d-flex justify-content-between mb-4">
-            <a href="<?= Url::to(['flashcard/index']) ?>" class="btn btn-secondary">Edit</a>
+            <a href="<?= Url::to(['flashcard/update', 'id' => $flashcard->flashcard_id]) ?>" class="btn btn-secondary">Edit</a>
             <a href="<?= Url::to(['flashcard/index']) ?>" class="btn btn-danger position-absolute top-0 end-0 m-4" id="close-btn">Close</a>
         </div>
 
@@ -43,7 +44,7 @@ $this->registerCssFile('@web/css/userCreate.css', ['depends' => [\yii\bootstrap5
 </div>
 
 <script>
-    const flashcards = <?= json_encode($terms) ?>;
+    const flashcards = <?= json_encode($terms) ?>; // Passing the fetched terms and answers
     const flashcardCount = flashcards.length;
     let currentIndex = 0;
 

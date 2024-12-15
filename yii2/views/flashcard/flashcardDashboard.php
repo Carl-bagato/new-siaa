@@ -11,7 +11,7 @@ $this->registerCssFile('@web/css/dashboard.css', ['depends' => [\yii\bootstrap5\
 ?>
 
 <div class="container my-5">
-    <button class="btn btn-secondary" onclick="history.back()">Back</button>
+    <?= Html::a('Back', Url::to(['site/landing-page']), ['class' => 'btn btn-secondary']) ?>
     <?= Html::a('Log Out', ['site/logout'], [
         'class' => 'btn btn-danger position-absolute top-0 end-0 m-3',
         'data-method' => 'post',
@@ -26,7 +26,7 @@ $this->registerCssFile('@web/css/dashboard.css', ['depends' => [\yii\bootstrap5\
                     <p><?= nl2br(Html::encode($flashcard->content)) ?></p>
                     <small class="text-muted">Created on: <?= Yii::$app->formatter->asDate($flashcard->date_created) ?></small>
                     <div class="text-center mt-3">
-                        <?= Html::a('Display', ['flashcard/UserDisplay', 'id' => $flashcard->flashcard_id], ['class' => 'btn btn-primary btn-sm']) ?>
+                        <?= Html::a('Display', ['flashcard/display', 'id' => $flashcard->flashcard_id], ['class' => 'btn btn-primary btn-sm']) ?>
                         <?= Html::a('Edit', ['flashcard/update', 'id' => $flashcard->flashcard_id], ['class' => 'btn btn-warning btn-sm']) ?>
                         <button class="btn btn-danger btn-sm delete-btn">Delete</button>
                     </div>
@@ -54,7 +54,10 @@ $this->registerJs("
             if (confirm('Are you sure you want to delete this flashcard?')) {
                 fetch('" . Url::to(['flashcard/delete']) . "', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': '" . Yii::$app->request->csrfToken . "'
+                    },
                     body: JSON.stringify({ id })
                 })
                 .then(response => response.json())
@@ -64,10 +67,13 @@ $this->registerJs("
                         card.style.opacity = '0';
                         setTimeout(() => card.remove(), 1000);
                     } else {
-                        alert('Failed to delete flashcard.');
+                        alert('Failed to delete the flashcard. Please try again.');
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the flashcard.');
+                });
             }
         });
     });

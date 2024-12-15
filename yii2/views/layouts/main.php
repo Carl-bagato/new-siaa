@@ -13,6 +13,8 @@ AppAsset::register($this);
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
+$this->registerCssFile('@web/css/main.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+
 ?>
 <?php $this->beginPage() ?>
 

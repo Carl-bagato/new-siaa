@@ -29,21 +29,12 @@ class TermAnswer extends ActiveRecord
     public function rules()
     {
         return [
-            [['flashcard_id', 'term', 'answer'], 'required'],
-            [['term_answer_id', 'flashcard_id'], 'integer'],
-            [['answer'], 'string', 'max' => 255],
-            [['term'], 'string', 'max' => 255],
-            [['answer'], 'string'],
+            [['flashcard_id', 'term', 'answer'], 'required'],  // Ensure all fields are present
+            [['flashcard_id'], 'integer'],  // Validate flashcard_id as integer
+            [['term', 'answer'], 'string'],  // Both term and answer can be string (no length restriction)
+            [['answer'], 'string', 'max' => 1000],  // Allow longer answers if necessary
         ];
     }
-
-    /**
-     * Gets the flashcard that owns the term-answer pair.
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFlashcard()
-    {
-        return $this->hasOne(Flashcard::class, ['flashcard_id' => 'flashcard_id']);
-    }
 }
+
 ?>

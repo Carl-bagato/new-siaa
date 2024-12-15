@@ -5,6 +5,12 @@ use yii\db\ActiveRecord;
 
 class Flashcard extends ActiveRecord
 {
+
+    public $set_title;
+    public $set_description;
+    public $terms = [];
+    public $definitions = [];
+
     // This method specifies the table name
     public static function tableName()
     {

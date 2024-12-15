@@ -26,8 +26,8 @@ $this->registerCssFile('@web/css/userCreate.css', ['depends' => [\yii\bootstrap5
             'options' => ['enctype' => 'multipart/form-data'],
         ]); ?>
 
-        <?= $form->field($model, 'set_title')->textInput(['name' => 'FlashcardForm[set_title]', 'placeholder' => 'Enter set title']) ?>
-        <?= $form->field($model, 'set_description')->textarea(['name' => 'FlashcardForm[set_description]', 'placeholder' => 'Enter a brief description', 'rows' => 3]) ?>
+        <?= $form->field($model, 'set_title')->textInput(['name' => 'FlashcardForm[set_title]', 'placeholder' => 'Enter set title', 'required']) ?>
+        <?= $form->field($model, 'set_description')->textarea(['name' => 'FlashcardForm[set_description]', 'placeholder' => 'Enter a brief description', 'rows' => 3, 'required']) ?>
 
         <div id="flashcards">
             <!-- Dynamic flashcards will be added via JavaScript -->
@@ -37,6 +37,8 @@ $this->registerCssFile('@web/css/userCreate.css', ['depends' => [\yii\bootstrap5
 
         <div class="text-center">
             <?= Html::submitButton('Create Flashcard Set', ['class' => 'btn btn-primary-submit w-100']) ?>
+
+            
         </div>
 
         <?php ActiveForm::end(); ?>
@@ -44,6 +46,9 @@ $this->registerCssFile('@web/css/userCreate.css', ['depends' => [\yii\bootstrap5
 </div>
 
 <script type="text/javascript">
+
+    console.log('Form submission triggered!');
+
     let cardCounter = 1;
 
     // Function to dynamically add cards
